@@ -21,11 +21,13 @@
      	  var flyStartCntDown = 10;
      	  var seLists = [
      	  	{id:"Music", src:"game_start.ogg"},
-     	  	{id:"Jump", src:"zyouzi_jump.ogg"}
+     	  	{id:"Jump", src:"zyouzi_jump.ogg"},
+     	  	{id:"BGM", src:"tobesan_bgm.ogg"}
      	  ];
      	  function init() {
      	  
      	  	createjs.Sound.alternateExtensions = ["mp3"];
+     	  	createjs.Sound.addEventListener("fileload", loadHandler);
      	  	createjs.Sound.registerSounds(seLists, "");
      	  
      	  
@@ -37,8 +39,6 @@
      	    gameBg = new createjs.Bitmap("zyouzi_bg.png");
      	    gameBg.setBounds(0, 0, 1024, 768);
      	    stage.addChild(gameBg);
-     	    
-
      	    
      	    graphics = new createjs.Graphics();
      	         	    
@@ -57,14 +57,11 @@
      	    flyText.x = 700;
      	    flyText.y = 100;
      	    stage.addChild(flyText);
-     	    
 
      	    zyouzi = new createjs.Bitmap("zyouzi.png");
      	    zyouzi.x = 300;
      	    zyouzi.y = 260;
      	    stage.addChild(zyouzi);
-     	    
-     	    
      	    
      	    timingCnt = 0;
      	    zyouzi.addEventListener("click", zyouziClickHandler);
@@ -96,6 +93,13 @@
      	    startButton.addEventListener("mouseover", handleMouseOver);
      	    startButton.addEventListener("mouseout", handleMouseOut);
      	    startButton.addEventListener("click", handleGameStart);
+     	    
+     	    function loadHandler(eventObject) {
+     	    	console.log("sound complete");
+     	    	var instance = createjs.Sound.createInstance("BGM"); // SoundJSのインスタンスを再生(idを指定)
+	 			instance.setVolume(0.1);
+	 			instance.play({loop:-1})
+     	    }
      	    
      	    function handleMouseOver(event) {
      	    	bgUp.visible = false;
