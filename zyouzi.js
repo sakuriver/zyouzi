@@ -30,8 +30,9 @@
  	    stage.enableMouseOver();
  	    stage.clear();
  	    
- 	    gameBg = new createjs.Bitmap("zyouzi_bg.png");
+ 	    gameBg = new createjs.Bitmap("game_bg.png");
  	    gameBg.setBounds(0, 0, 1024, 768);
+ 	    gameBg.sourceRect = {x:0, y:1200, width:1024, height:768};
  	    stage.addChild(gameBg);
  	    
  	    graphics = new createjs.Graphics();
@@ -110,21 +111,21 @@
  	    function handleGameStart(event) {
  	    	gauge.visible = true;
  	    	gauge_bg.visible = true;
-	    	    startFlg = 1;
-	    	    pushFlg = 0;
-	  			flyStartCntDown = 10;
+	    	startFlg = 1;
+	    	pushFlg = 0;
+	  		flyStartCntDown = 10;
  	    	startButton.visible = false;
  	    	createjs.Sound.play("Music");
-	  			flyText.text = "ジョージのとんだ距離 0kｍ";
-	  			zyouzi.y = 260;
-	  			gameBg.filters = [];
-	  			gameBg.cache(0, 0, 1024, 768);
-
+	  		flyText.text = "ジョージのとんだ距離 0kｍ";
+	  		zyouzi.y = 260;
+	  		gameBg.filters = [];
+			gameBg.sourceRect = {x:0, y:1200, width:1024, height:768};
+	  		gameBg.cache(0, 0, 1024, 768);
  	    }
 
 
  	    // tick イベントを監視します
- 	    createjs.Ticker.setFPS(30);
+ 	    createjs.Ticker.setFPS(50);
  	    createjs.Ticker.on("tick", function () {
  	        
  	        // Stageの描画を更新します
@@ -145,15 +146,19 @@
  	        }
  	        
  	        if ((pushFlg == 1 && flyStartCntDown <= 0) && resultCnt < resultFly ) {
- 	  			flyText.text = "ジョージのとんだ距離 " + (resultCnt ) + "kｍ";
+ 	  			flyText.text = "ジョージのとんだ距離 " + resultCnt + "kｍ";
+ 	  			var prevResultCnt = resultCnt;
  	  			resultCnt += 1;
  	  			zyouzi.y -= (resultCnt * 2) - 4 < 30 ? (resultCnt * 2) - 4 : 30;
  	  			if (zyouzi.y < 0) {
  	  				zyouzi.y = 0;
  	  			}
-     	        var colorFilter = new createjs.ColorFilter(1, 1, 1, 1, -resultCnt, -resultCnt, -resultCnt, 0);
-     	        gameBg.filters = [colorFilter];
-     	        gameBg.cache(0, 0, 1024, 768);
+ 	  			if (prevResultCnt > 80 && prevResultCnt < 150 && resultCnt % 6 == 0) {
+     	            var setColor = resultCnt < 150 ? resultCnt:150;
+     	            gameBg.filters = [new createjs.ColorFilter(1, 1, 1, 1, -setColor, -setColor, -setColor, 0)];
+     	        }
+     	        gameBg.sourceRect.y = 1200-(resultCnt*4);
+     	        gameBg.updateCache();
      	    } else if ((pushFlg == 1 && flyStartCntDown > 0) && resultCnt < resultFly) {
      	    	flyStartCntDown -= 1;
      	    	if (flyStartCntDown < 0) {
@@ -168,12 +173,14 @@
  	  			startButton.visible = true;
  	  		}
  	  		
- 	  		if (pushFlg == 0 && startFlg == 1 && resultCnt == 0) {
- 	            gauge.graphics.clear();
- 	            gauge_bg.graphics.clear();
+ 	  		if (pushFlg == 0 && startFlg == 1) {
+ 	  		    if (resultCnt == 0) {
+ 	                gauge.graphics.clear();
+ 	                gauge_bg.graphics.clear();
+ 	            }
+ 	            gauge_bg.graphics.beginFill("#FF0").drawRect(818, 290, 24, 310);
+  		   	    gauge.graphics.beginFill("#0F0").drawRect(820, 300 + timingCnt, 20, 300 - timingCnt);
  	        }
-     	    gauge_bg.graphics.beginFill("#FF0").drawRect(818, 290, 24, 310);
-     	    gauge.graphics.beginFill("#0F0").drawRect(820, 300 + timingCnt, 20, 300 - timingCnt);
  	        stage.update();
  	    });
  	  }
