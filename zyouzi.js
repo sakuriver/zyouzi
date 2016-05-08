@@ -1,5 +1,6 @@
  	  window.addEventListener("load", init);
  	  var gameBg;
+ 	  var titleLogo;
  	  var stage;
  	  var zyouzi;
  	  var graphics;
@@ -31,32 +32,38 @@
  	    stage.clear();
  	    
  	    gameBg = new createjs.Bitmap("game_bg.png");
- 	    gameBg.setBounds(0, 0, 1024, 768);
- 	    gameBg.sourceRect = {x:0, y:1200, width:1024, height:768};
+ 	    gameBg.setBounds(0, 0, 450, 800);
+ 	    gameBg.sourceRect = {x:0, y:1200, width:450, height:800};
  	    stage.addChild(gameBg);
  	    
  	    graphics = new createjs.Graphics();
  	         	    
  	    gauge = new createjs.Shape(graphics);
- 	    gauge.graphics.beginFill("#0F0").drawRect(400, 0, 20, 300);
+ 	    gauge.graphics.beginFill("#0F0").drawRect(200, 0, 20, 300);
  	    gauge.visible = false;
  	    
  	    gauge_bg = new createjs.Shape(graphics);
- 	    gauge_bg.graphics.beginFill("#555").drawRect(395, -10, 25, 320);
+ 	    gauge_bg.graphics.beginFill("#555").drawRect(205, -10, 25, 320);
  	    gauge_bg.visible = false;
 
  	    stage.addChild(gauge_bg);     	    
  	    stage.addChild(gauge);
  	    
- 	    flyText = new createjs.Text("ジョージのとんだ距離 0kｍ", "25px Arial", "#ff3300");
- 	    flyText.x = 700;
+ 	    flyText = new createjs.Text("とんだ距離 0kｍ", "Bold 25px Arial", "#ff3300");
+ 	    flyText.x = 245;
  	    flyText.y = 100;
  	    stage.addChild(flyText);
 
  	    zyouzi = new createjs.Bitmap("zyouzi.png");
- 	    zyouzi.x = 300;
+ 	    zyouzi.x = 40;
  	    zyouzi.y = 260;
  	    stage.addChild(zyouzi);
+ 	    
+ 	    title_logo = new createjs.Bitmap("title_logo.png");
+ 	    title_logo.x = 0;
+ 	    title_logo.y = 30;
+ 	    stage.addChild(title_logo);
+ 	    
  	    
  	    timingCnt = 0;
  	    zyouzi.addEventListener("click", zyouziClickHandler);
@@ -68,7 +75,7 @@
  	    stage.addChild(startButton);
  	    
  	    var bgUp = new createjs.Shape();
-	        bgUp.graphics.setStrokeStyle(1).beginStroke("#563d7c").beginFill("white").drawRoundRect(0, 0, 240, 50, 4);
+	    bgUp.graphics.setStrokeStyle(1).beginStroke("#563d7c").beginFill("white").drawRoundRect(0, 0, 240, 50, 4);
  	    startButton.addChild(bgUp);
  	    bgUp.visible = true;
  	    
@@ -82,8 +89,8 @@
  	    label.x = 50;
  	    label.y = 25;
  	    startButton.addChild(label);
- 	    startButton.x = 500;
- 	    startButton.y = 200;
+ 	    startButton.x = 200;
+ 	    startButton.y = 650;
  	    
  	    startButton.addEventListener("mouseover", handleMouseOver);
  	    startButton.addEventListener("mouseout", handleMouseOut);
@@ -115,12 +122,13 @@
 	    	pushFlg = 0;
 	  		flyStartCntDown = 10;
  	    	startButton.visible = false;
+ 	    	title_logo.visible = false;
  	    	createjs.Sound.play("Music");
-	  		flyText.text = "ジョージのとんだ距離 0kｍ";
+	  		flyText.text = "とんだ距離 0kｍ";
 	  		zyouzi.y = 260;
 	  		gameBg.filters = [];
-			gameBg.sourceRect = {x:0, y:1200, width:1024, height:768};
-	  		gameBg.cache(0, 0, 1024, 768);
+			gameBg.sourceRect = {x:0, y:1200, width:450, height:800};
+	  		gameBg.cache(0, 0, 450, 800);
  	    }
 
 
@@ -146,7 +154,7 @@
  	        }
  	        
  	        if ((pushFlg == 1 && flyStartCntDown <= 0) && resultCnt < resultFly ) {
- 	  			flyText.text = "ジョージのとんだ距離 " + resultCnt + "kｍ";
+ 	  			flyText.text = "とんだ距離 " + resultCnt + "kｍ";
  	  			var prevResultCnt = resultCnt;
  	  			resultCnt += 1;
  	  			zyouzi.y -= (resultCnt * 2) - 4 < 30 ? (resultCnt * 2) - 4 : 30;
@@ -178,8 +186,8 @@
  	                gauge.graphics.clear();
  	                gauge_bg.graphics.clear();
  	            }
- 	            gauge_bg.graphics.beginFill("#FF0").drawRect(818, 290, 24, 310);
-  		   	    gauge.graphics.beginFill("#0F0").drawRect(820, 300 + timingCnt, 20, 300 - timingCnt);
+ 	            gauge_bg.graphics.beginFill("#FF0").drawRect(278, 290, 24, 310);
+  		   	    gauge.graphics.beginFill("#0F0").drawRect(280, 300 + timingCnt, 20, 300 - timingCnt);
  	        }
  	        stage.update();
  	    });
